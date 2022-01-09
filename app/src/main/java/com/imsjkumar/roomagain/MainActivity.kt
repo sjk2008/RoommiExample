@@ -2,26 +2,32 @@ package com.imsjkumar.roomagain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.imsjkumar.roomagain.roomDB.RoommiDataBase
-import com.imsjkumar.roomagain.roomDB.RoommiTable
+import android.util.Log
+import com.imsjkumar.roomagain.roomDatabase.Contact
+import com.imsjkumar.roomagain.roomDatabase.ContactDatabase
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.*
 
+@InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
-
-    lateinit var database:RoommiDataBase
-
+    lateinit var database: ContactDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        database=RoommiDataBase.getDatabase(this)
-        var database2= RoommiDataBase.getDatabase(this)
+        database = ContactDatabase.getDatabase(this)
+        var database2 = ContactDatabase.getDatabase(this)
 
         GlobalScope.launch {
-            database.RoommiDao().insertRoommi(RoommiTable(0,"Suraj","9205618086", Date()))
+            database.contactDAO().insertContact(Contact(0, "imsjkumar", "9205618086", Date(), 1))
         }
+    }
 
+    fun getData(view: android.view.View) {
+        database.contactDAO().getContact().observe(this, {
+            Log.d("suraj", it.toString())
+        })
     }
 }
